@@ -1,0 +1,9 @@
+### Todo
+* use logback
+
+#### References
+* https://kotlinlang.org/docs/reference/using-gradle.html[Kotlin with gradle]
+* https://learnxinyminutes.com/docs/kotlin[Kotlin: fast learn]
+* https://kotlin.link[Several kotlin links]
+* https://javalin.io[Kotlin with Javalin]
+* https://sparktutorials.github.io/2017/01/28/using-spark-with-kotlin.html[Kotlin with Spark]
