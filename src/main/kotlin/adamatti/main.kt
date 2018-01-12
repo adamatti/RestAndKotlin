@@ -1,8 +1,10 @@
 package adamatti
 
+import io.javalin.ApiBuilder.*
 import io.javalin.Javalin
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 // https://discuss.kotlinlang.org/t/best-practices-for-loggers/226
 fun <T> loggerFor(clazz: Class<T>):Logger = LoggerFactory.getLogger(clazz)
@@ -26,20 +28,29 @@ private fun databaseSeeding(){
 private fun registerJavalin() {
     val app = Javalin.start(7000)
 
-    app.get("/person"){ctx ->
+    app.routes {
+        path("/person"){
+            get { ctx ->
+                ctx.json(PersonRepo.list())
+            }
+            post { ctx ->
+                val person = ctx.bodyAsClass(Person::class.java)
+                personRepo.save(person)
+                ctx.json(person)
+            }
 
-        ctx.json(PersonRepo.list())
+            delete { ctx ->
+                val person = ctx.bodyAsClass(Person::class.java)
+                personRepo.delete(person)
+                ctx.status(204)
+            }
+        }
     }
 
-    app.post("/person"){ctx ->
-        val person = ctx.bodyAsClass(Person::class.java)
-        personRepo.save(person)
-        ctx.json(person)
-    }
-
-    app.delete("/person"){ctx ->
-        val person = ctx.bodyAsClass(Person::class.java)
-        personRepo.delete(person)
-        ctx.status(204)
+    app.get("/healthcheck"){ctx ->
+        ctx.json(mapOf(
+            "status" to "Ok",
+            "date" to Date().toString()
+        ))
     }
 }
